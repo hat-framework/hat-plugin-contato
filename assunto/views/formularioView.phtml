@@ -1,0 +1,9 @@
+<?php
+
+$this->Html->LoadAngular();
+$this->Html->LoadJs('plugins/contato/contatoCtrl');
+
+?>
+<div ng-app="contato" ng-controller="contato_assuntoCtrl">
+    <h2 ng-model="titulo"></h2>
+</div>

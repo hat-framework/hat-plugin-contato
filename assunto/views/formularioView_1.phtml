@@ -1,0 +1,51 @@
+<h2 id="lcod_assunto"><?php if(isset($titulo)) echo $titulo; ?></h2>
+<?php $link = $this->Html->getLink(LINK .'/ajax');?>
+<script type="text/javascript">
+$(document).ready(function(){
+    var myajaxlink = '<?php echo $link; ?>';
+    $('select[id=cod_assunto]').change(function(){
+        var assunto = $(this).val();
+        var form    = $(this).parent().parent();
+        $.ajax({
+                url: myajaxlink,
+                dataType: 'html',
+                data: 'form='+assunto,
+                type: 'POST',
+                beforeSend: function(){
+                    form.children('#extrafield').fadeOut('slow', function(){
+                        $(this).remove();
+                    });
+                    blockUI_wait('Pesquisando..');
+                    $('#erro').hide();
+                    $('#success').hide();
+                    $('.erro').delay('1200').fadeOut('slow');
+                    $('.valid_msg').delay('1200').fadeOut('slow');
+                    
+                },
+                success: function(html) {
+                    blockUI_unwait();
+                    form.children("#f_mensagem").before(''+html+'');
+                    if(form.children("#extrafield input:file").attr('id') != undefined){
+                        form.attr('enctype', 'multipart/form-data');
+                    }else{
+                        form.attr('enctype', 'application/x-www-form-urlencoded');
+                    }
+                },
+                error: function(erro){
+                    blockUI_unwait();
+                    blockUI_error('Erro na comunicação com o site');
+                }
+
+        });
+
+        var text = $('#cod_assunto option:selected').text();
+        $('#lcod_assunto').hide().html(text).fadeIn(1000);
+    });
+});
+</script>
+<?php
+if(isset($dados)){
+    $this->LoadResource('formulario', 'form');
+    $this->form->NewForm($dados);
+}// echo $formulario;
+?>

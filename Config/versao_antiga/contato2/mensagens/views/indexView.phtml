@@ -1,0 +1,9 @@
+<h1>Minhas Mensagens</h1>
+<?php
+    if(!isset($mensagens) || empty ($mensagens)){
+        echo "Nenhuma mensagem registrada";
+    }else{
+        $this->LoadResource("html/table", 'table');
+        $this->table->draw($mensagens);
+    }
+?>
